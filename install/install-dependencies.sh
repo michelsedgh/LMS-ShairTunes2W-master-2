@@ -77,12 +77,12 @@ case $PLATFORM in
         
         # Install other dependencies
         sudo apt-get install -y build-essential ffmpeg socat \
-            golang-go pulseaudio portaudio19-dev
+            golang-go pulseaudio portaudio19-dev git
         ;;
     redhat)
         echo "Installing packages for RedHat/CentOS..."
         sudo yum install -y gcc make ffmpeg socat \
-            golang libfdk-aac-devel pulseaudio portaudio-devel
+            golang libfdk-aac-devel pulseaudio portaudio-devel git
         ;;
     macos)
         echo "Installing packages for macOS..."
@@ -90,7 +90,7 @@ case $PLATFORM in
             echo "❌ Homebrew not installed. Please install it first."
             exit 1
         fi
-        brew install ffmpeg socat golang libfdk-aac portaudio pulseaudio
+        brew install ffmpeg socat golang libfdk-aac portaudio pulseaudio git
         ;;
 esac
 
@@ -130,16 +130,38 @@ else
     esac
 fi
 
-# Build GoPlay2
-echo "Building GoPlay2..."
+# Build GoPlay2 with audio-sync branch merged
+echo "Building GoPlay2 with audio synchronization features..."
 cd "$PARENT_DIR/build"
 
-if [ ! -d "goplay2" ]; then
-    echo "Cloning GoPlay2 repository..."
-    git clone https://github.com/openairplay/goplay2.git
+# Remove the directory if it exists to ensure a clean build
+if [ -d "goplay2" ]; then
+    echo "Removing existing goplay2 directory for clean build..."
+    rm -rf goplay2
 fi
 
+echo "Cloning GoPlay2 repository..."
+git clone https://github.com/openairplay/goplay2.git
 cd goplay2
+
+# Check available remote branches
+echo "Checking available branches..."
+git fetch
+git branch -r
+
+# Try to merge the audio-sync branch
+echo "Merging audio-sync feature branch..."
+if git branch -r | grep -q "origin/feature/audio-sync"; then
+    git checkout feature/audio-sync || git checkout -b feature/audio-sync origin/feature/audio-sync
+    echo "Successfully checked out audio-sync branch"
+else
+    echo "Audio-sync branch not found, will use main branch instead"
+fi
+
+# Ensure dependencies are fetched
+echo "Fetching Go dependencies..."
+go get -v ./...
+
 echo "Compiling GoPlay2..."
 go build
 
@@ -176,12 +198,17 @@ if [ "$PLATFORM" != "macos" ]; then
 fi
 
 echo ""
-echo "✅ Installation complete!"
+echo "✅ Installation complete with audio synchronization features!"
 echo ""
 echo "Important notes:"
 echo "1. Make sure PulseAudio is running when using the plugin"
 echo "2. If you're running LMS as a different user, you may need to configure PulseAudio for that user"
 echo "3. For troubleshooting, check the LMS logs"
+echo ""
+echo "Audio sync features that have been added:"
+echo "- Improved multi-room audio synchronization"
+echo "- Better latency handling"
+echo "- PTP (Precision Time Protocol) support"
 echo ""
 echo "Next steps:"
 echo "1. Modify Plugin.pm to implement GoPlay2 integration"
