@@ -39,9 +39,45 @@ echo "Installing dependencies for ShairTunes2W with GoPlay2..."
 case $PLATFORM in
     debian)
         echo "Installing packages for Debian/Ubuntu..."
+        
+        # Enable non-free repositories for libfdk-aac-dev (which is in non-free)
+        if [ -f /etc/apt/sources.list ]; then
+            echo "Enabling non-free repositories..."
+            # Check if it's Debian or Ubuntu
+            if grep -q "debian" /etc/apt/sources.list; then
+                # For Debian: check if non-free is already enabled
+                if ! grep -q "non-free" /etc/apt/sources.list; then
+                    echo "Adding non-free repository to sources.list"
+                    sudo sed -i 's/main$/main contrib non-free/g' /etc/apt/sources.list
+                else
+                    echo "Non-free repository already enabled"
+                fi
+            elif grep -q "ubuntu" /etc/apt/sources.list; then
+                # For Ubuntu: check if multiverse is already enabled
+                if ! grep -q "multiverse" /etc/apt/sources.list; then
+                    echo "Adding multiverse repository to sources.list"
+                    sudo add-apt-repository multiverse -y
+                else
+                    echo "Multiverse repository already enabled"
+                fi
+            fi
+        else
+            echo "Warning: /etc/apt/sources.list not found, cannot enable non-free repository"
+            echo "You may need to manually enable it to install libfdk-aac-dev"
+        fi
+        
         sudo apt-get update
+        
+        # Try to install fdk-aac from main repositories first
+        echo "Attempting to install libfdk-aac-dev..."
+        if ! sudo apt-get install -y libfdk-aac-dev; then
+            echo "libfdk-aac-dev not found, trying alternative package fdk-aac-dev..."
+            sudo apt-get install -y fdk-aac-dev || echo "Warning: Could not install libfdk-aac-dev or fdk-aac-dev"
+        fi
+        
+        # Install other dependencies
         sudo apt-get install -y build-essential ffmpeg socat \
-            golang-go libfdk-aac-dev pulseaudio portaudio19-dev
+            golang-go pulseaudio portaudio19-dev
         ;;
     redhat)
         echo "Installing packages for RedHat/CentOS..."
