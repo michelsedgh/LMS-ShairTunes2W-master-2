@@ -77,12 +77,12 @@ case $PLATFORM in
         
         # Install other dependencies
         sudo apt-get install -y build-essential ffmpeg socat \
-            golang-go pulseaudio portaudio19-dev git
+            golang-go pulseaudio portaudio19-dev libsamplerate0-dev git
         ;;
     redhat)
         echo "Installing packages for RedHat/CentOS..."
         sudo yum install -y gcc make ffmpeg socat \
-            golang libfdk-aac-devel pulseaudio portaudio-devel git
+            golang libfdk-aac-devel pulseaudio portaudio-devel libsamplerate-devel git
         ;;
     macos)
         echo "Installing packages for macOS..."
@@ -90,7 +90,7 @@ case $PLATFORM in
             echo "❌ Homebrew not installed. Please install it first."
             exit 1
         fi
-        brew install ffmpeg socat golang libfdk-aac portaudio pulseaudio git
+        brew install ffmpeg socat golang libfdk-aac portaudio pulseaudio libsamplerate git
         ;;
 esac
 
