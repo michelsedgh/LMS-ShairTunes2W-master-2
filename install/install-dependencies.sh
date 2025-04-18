@@ -28,9 +28,9 @@ fi
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PARENT_DIR="$(dirname "$SCRIPT_DIR")"
 
-# Create required directories
-echo "Creating directory structure..."
-mkdir -p "$PARENT_DIR/bin"
+# Create required directories using existing Bin directory
+echo "Setting up directory structure..."
+mkdir -p "$PARENT_DIR/plugin/Bin"
 mkdir -p "$PARENT_DIR/build"
 
 echo "Installing dependencies for ShairTunes2W with GoPlay2..."
@@ -94,6 +94,42 @@ case $PLATFORM in
         ;;
 esac
 
+# Determine correct binary name suffix based on platform
+if [ "$PLATFORM" == "macos" ]; then
+    if [ "$(uname -m)" == "arm64" ]; then
+        BINARY_SUFFIX="macos-arm64"
+    else
+        BINARY_SUFFIX="macos-x86_64"
+    fi
+else
+    # For Linux
+    ARCH=$(uname -m)
+    case "$ARCH" in
+        x86_64)
+            BINARY_SUFFIX="linux-x86_64"
+            ;;
+        i?86)
+            BINARY_SUFFIX="linux-x86"
+            ;;
+        aarch64)
+            BINARY_SUFFIX="linux-aarch64"
+            ;;
+        armv7*)
+            BINARY_SUFFIX="linux-arm"
+            ;;
+        arm*)
+            if [ $(readelf -A /proc/self/exe | grep Tag_ABI_VFP_args) ]; then
+                BINARY_SUFFIX="linux-armv6"
+            else
+                BINARY_SUFFIX="linux-armv5"
+            fi
+            ;;
+        *)
+            BINARY_SUFFIX="linux-$(uname -m)"
+            ;;
+    esac
+fi
+
 # Build GoPlay2
 echo "Building GoPlay2..."
 cd "$PARENT_DIR/build"
@@ -113,14 +149,22 @@ if [ ! -f "goplay2" ]; then
     exit 1
 fi
 
-# Copy binary to bin directory
-echo "Copying GoPlay2 binary to bin directory..."
-cp goplay2 "$PARENT_DIR/bin/"
+# Copy binary to the existing Bin directory with appropriate name
+echo "Copying GoPlay2 binary to plugin/Bin directory..."
+cp goplay2 "$PARENT_DIR/plugin/Bin/goplay2-${BINARY_SUFFIX}"
+
+# Also create a symlink or copy without the suffix for easier reference
+if [ "$PLATFORM" == "macos" ]; then
+    cp goplay2 "$PARENT_DIR/plugin/Bin/goplay2"
+else
+    cp goplay2 "$PARENT_DIR/plugin/Bin/goplay2"
+fi
 
 # Set capabilities for GoPlay2
 if [ "$PLATFORM" != "macos" ]; then
     echo "Setting capabilities for GoPlay2..."
-    sudo setcap 'cap_net_bind_service=+ep' "$PARENT_DIR/bin/goplay2"
+    sudo setcap 'cap_net_bind_service=+ep' "$PARENT_DIR/plugin/Bin/goplay2-${BINARY_SUFFIX}"
+    sudo setcap 'cap_net_bind_service=+ep' "$PARENT_DIR/plugin/Bin/goplay2"
 fi
 
 # Setup PulseAudio for the current user
