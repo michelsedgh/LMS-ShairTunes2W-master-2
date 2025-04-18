@@ -130,8 +130,8 @@ else
     esac
 fi
 
-# Build GoPlay2 with audio-sync branch merged
-echo "Building GoPlay2 with audio synchronization features..."
+# Build GoPlay2 directly from audio-sync branch
+echo "Building GoPlay2 from audio-sync branch..."
 cd "$PARENT_DIR/build"
 
 # Remove the directory if it exists to ensure a clean build
@@ -140,27 +140,28 @@ if [ -d "goplay2" ]; then
     rm -rf goplay2
 fi
 
-echo "Cloning GoPlay2 repository..."
-git clone https://github.com/openairplay/goplay2.git
+echo "Cloning GoPlay2 repository directly from audio-sync branch..."
+git clone -b feature/audio-sync https://github.com/openairplay/goplay2.git
 cd goplay2
-
-# Check available remote branches
-echo "Checking available branches..."
-git fetch
-git branch -r
-
-# Try to merge the audio-sync branch
-echo "Merging audio-sync feature branch..."
-if git branch -r | grep -q "origin/feature/audio-sync"; then
-    git checkout feature/audio-sync || git checkout -b feature/audio-sync origin/feature/audio-sync
-    echo "Successfully checked out audio-sync branch"
-else
-    echo "Audio-sync branch not found, will use main branch instead"
-fi
 
 # Ensure dependencies are fetched
 echo "Fetching Go dependencies..."
 go get -v ./...
+
+# Check for build issues and attempt to fix the codec.NewStream issue
+if grep -r "codec.NewStream(" --include="*.go" .; then
+    echo "Found codec.NewStream calls, checking for parameter issues..."
+    # Try to check or fix the audio/player.go file if it exists
+    if [ -f "audio/player.go" ]; then
+        echo "Examining audio/player.go..."
+        # Backup the file before making any changes
+        cp audio/player.go audio/player.go.bak
+        
+        # Fix the specific line with the error (removing the float64 parameter)
+        sed -i 's/codec.NewStream([^)]*)/codec.NewStream()/g' audio/player.go
+        echo "Applied potential fix to audio/player.go"
+    fi
+fi
 
 echo "Compiling GoPlay2..."
 go build
