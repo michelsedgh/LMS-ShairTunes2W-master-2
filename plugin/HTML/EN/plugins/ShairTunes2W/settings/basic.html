@@ -1,0 +1,112 @@
+[% PROCESS settings/header.html %]
+
+	<div class="prefDesc">
+			
+	[% WRAPPER setting title="PLUGIN_SHAIRTUNES2_BINARIES" desc="PLUGIN_SHAIRTUNES2_BINARIES_DESC" %]
+		<select class="stdedit" name="binary" id="binary">
+		[% FOREACH entry IN binaries %]
+			<option [% IF entry == binary %]selected[% END %] value="[% entry %]">[% entry %]</option>
+		[% END %]
+		</select>
+		&nbsp&nbsp[% "PLUGIN_SHAIRTUNES2_NEEDRESTART" | string %]
+		&nbsp&nbsp<input name="republish" type="submit" value=[% "PLUGIN_SHAIRTUNES2_REPUBLISH" | string %]>
+		&nbsp&nbsp<input name="wipe" type="submit" value=[% "PLUGIN_SHAIRTUNES2_WIPE" | string %]>
+        &nbsp<b><a href="https://learn.microsoft.com/en-US/cpp/windows/latest-supported-vc-redist?view=msvc-170" target="vcredist">[% "PLUGIN_SHAIRTUNES2_VCREDIST" | string %]</a></b>
+	[% END %]
+	
+	[% WRAPPER setting title="PLUGIN_SHAIRTUNES2_INBOUNDPORT" desc="PLUGIN_SHAIRTUNES2_INBOUNDPORT_DESC" %]
+		[% "PLUGIN_SHAIRTUNES2_INBOUNDBASE" | string %]&nbsp
+		<input name="pref_port_base" id="pref_port_base" type="stdedit" value="[% prefs.pref_port_base %]" size="4">
+		&nbsp&nbsp[% "PLUGIN_SHAIRTUNES2_INBOUNDCOUNT" | string %]&nbsp
+		<input name="pref_port_range" id="pref_port_range" type="number" min="0" max="128" step="16" value="[% prefs.pref_port_range %]">
+	[% END %]
+	
+	[% WRAPPER setting title="PLUGIN_SHAIRTUNES2_LOGLEVEL" desc="PLUGIN_SHAIRTUNES2_LOGLEVEL_DESC" %]
+		<select class="stdedit" name="pref_loglevel" id="pref_loglevel">
+		[% FOREACH entry IN [ ['none',''], ['error','error'], ['warning','warn'], ['info','info'], ['debug','debug'], ['extra debug','sdebug'] ] %]
+			<option [% IF entry.1 == prefs.pref_loglevel %] selected [% END %] value="[% entry.1 %]"> [% entry.0 %] </option>
+		[% END %]</select>
+		&nbsp&nbsp[% logdir %]
+	[% END %]
+	
+	[% WRAPPER setting title="PLUGIN_SHAIRTUNES2_BUFFER" desc="PLUGIN_SHAIRTUNES2_BUFFER_DESC" %]
+		<input name="pref_bufferThreshold" id="pref_bufferThreshold" type="stdedit" value="[% prefs.pref_bufferThreshold %]" size="3" >
+	[% END %]
+	
+	[% WRAPPER setting title="PLUGIN_SHAIRTUNES2_LATENCY" desc="PLUGIN_SHAIRTUNES2_LATENCY_DESC" %]
+		[% "PLUGIN_SHAIRTUNES2_RTPLATENCY" | string %]&nbsp
+		<input name="pref_latency" id="pref_latency" type="stdedit" value="[% prefs.pref_latency %]" size="4" >
+		&nbsp&nbsp[% "PLUGIN_SHAIRTUNES2_HTTPLATENCY" | string %]&nbsp
+		<input name="pref_http_latency" id="pref_http_latency" type="stdedit" value="[% prefs.pref_http_latency %]" size="4" >
+		&nbsp[% "PLUGIN_SHAIRTUNES2_HTTPFILL" | string %]&nbsp
+		<input name="pref_http_fill" id="pref_http_fill" type="checkbox" [% IF prefs.pref_http_fill %] checked [% END %]>
+	[% END %]
+	
+	[% WRAPPER setting title="PLUGIN_SHAIRTUNES2_DRIFT" desc="PLUGIN_SHAIRTUNES2_DRIFT_DESC" %]
+		<input name="pref_drift" id="pref_drift" type="checkbox" [% IF prefs.pref_drift %] checked [% END %]>
+	[% END %]
+	
+	[% WRAPPER setting title="PLUGIN_SHAIRTUNES2_ENCODE" desc="PLUGIN_SHAIRTUNES2_ENCODE_DESC" %]
+	
+		<script type="text/javascript">
+		function codecchange() {
+			var codec = document.getElementById('codec_name');
+			var idx = codec.selectedIndex;
+			var	flac = document.getElementById('codec_flac');
+			var	mp3_aac = document.getElementById('codec_mp3_aac');
+			
+			codec = codec.options[idx].value;
+			mp3_aac.style.display = flac.style.display = 'none';
+			
+			if (codec === 'flc') {
+				flac.style.display = 'inline';
+			} else if (codec === 'mp3' || codec === 'aac') {
+				mp3_aac.style.display = 'inline';
+			}	
+		}
+		</script>
+		
+		<select class="stdedit" id="codec_name" name="codec_name" onchange="codecchange()">
+		[% FOREACH entry IN [ ['',''], ['wav','wav'], ['flac','flc'], ['mp3', 'mp3'], ['aac', 'aac'] ] %]
+			<option label="[% entry.0 %]" [% IF entry.1 == codec_name %]selected[% END %] value="[% entry.1 %]">
+		[% END %]
+		</select>
+		<span id="codec_flac" [% IF codec_name != 'flc' %]hidden[% END %]>
+		[% "PLUGIN_SHAIRTUNES2_FLACLEVEL" | string %]&nbsp
+		<select class="stdedit" name="codec_level" id="codec_level">
+		[% FOREACH entry IN [ '', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' ] %]
+			<option [% IF entry == codec_level %]selected[% END %] value="[% entry %]">[% entry %]</option>
+		[% END %]
+		</select>
+		</span>
+		<span id="codec_mp3_aac" [% IF codec_name != 'mp3' && codec_name != 'aac' %]hidden[% END %]>
+		[% "PLUGIN_SHAIRTUNES2_BITRATE" | string %]&nbsp
+		<select class="stdedit" name="codec_bitrate" id="codec_bitrate">
+		[% FOREACH entry IN [ '', '64', '96', '128', '144', '160', '192', '224', '256', '320' ] %]
+			<option [% IF entry == codec_bitrate %]selected[% END %] value="[% entry %]">[% entry %]</option>
+		[% END %]
+		</select>
+		</span>
+	[% END %]	
+		
+	[% WRAPPER setting title="PLUGIN_SHAIRTUNES2_SYNCVOLUME" desc="PLUGIN_SHAIRTUNES2_SYNCVOLUME_DESC" %]
+		<input name="pref_syncVolume" id="pref_syncVolume" type="checkbox" [% IF prefs.pref_syncVolume %] checked [% END %]>
+	[% END %]
+		
+	[% WRAPPER setting title="PLUGIN_SHAIRTUNES2_SQUEEZELITE" desc="PLUGIN_SHAIRTUNES2_SQUEEZELITE_DESC" %]
+		<input name="pref_squeezelite" id="pref_squeezelite" type="checkbox" [% IF prefs.pref_squeezelite %] checked [% END %] onchange="form.submit()" >
+	[% END %]
+	
+	<hr>
+	<table>
+	[% FOREACH entry IN players %]	
+		<tr>
+		<td><input name="enabled.[% entry.id %]" type="checkbox" [% IF entry.enabled %] checked [% END %]></td>
+		<th>&nbsp&nbsp[% entry.name %]</th><th>&nbsp[% entry.id %]</th>
+		</tr>
+	[% END %]
+	</table>
+	
+	</div>
+
+[% PROCESS settings/footer.html %]

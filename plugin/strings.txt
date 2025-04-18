@@ -1,0 +1,115 @@
+# String file for ShairTunes plugin
+
+PLUGIN_SHAIRTUNES2
+	EN	ShairTunes2 (fork)
+	
+PLUGIN_SHAIRTUNES2_DESC
+	EN	ShairTunes2 Integration (w/Windows)
+
+PLUGIN_SHAIRTUNES2_BINARIES
+	EN	Helper binary 
+
+PLUGIN_SHAIRTUNES2_REPUBLISH
+	EN	Re-Publish
+	
+PLUGIN_SHAIRTUNES2_WIPE
+	EN	Wipe
+	
+PLUGIN_SHAIRTUNES2_NEEDRESTART
+	EN	(restart LMS if changed)
+
+PLUGIN_SHAIRTUNES2_BINARIES_DESC
+	EN	Choose what helper will be used. Leave it empty to let plugin choose automatically
+	EN	<br>Re-Publish will stop all ShairTunes2 clients and republish them
+	EN	<br>Wipe will kill all DNS publishers with the same name and republish ShairTunes2 client - DANGEROUS
+    
+PLUGIN_SHAIRTUNES2_VCREDIST
+	EN	Windows users, please install this    
+	
+PLUGIN_SHAIRTUNES2_INBOUNDPORT
+	EN	Inbound ports
+
+PLUGIN_SHAIRTUNES2_INBOUNDPORT_DESC
+	EN	AirPlay protocol requires three incoming ports and the built-in webserver needs another one. Set the
+	EN	base value and count (don't forget to open these in your firewall). Leave empty for automatic selection
+	
+PLUGIN_SHAIRTUNES2_INBOUNDBASE
+	EN	Base
+	
+PLUGIN_SHAIRTUNES2_INBOUNDCOUNT
+	EN	Count
+	
+PLUGIN_SHAIRTUNES2_LOGLEVEL
+	EN	Enable logging 
+	
+PLUGIN_SHAIRTUNES2_LOGLEVEL_DESC
+	EN	Set various log level
+
+PLUGIN_SHAIRTUNES2_BUFFER
+	EN	Buffer level (KB)
+	
+PLUGIN_SHAIRTUNES2_BUFFER_DESC
+	EN	Set the amount of buffering LMS does before playing. 
+
+PLUGIN_SHAIRTUNES2_LATENCY
+	EN	RTP and HTTP buffering (ms)
+
+PLUGIN_SHAIRTUNES2_RTPLATENCY
+	EN	RTP latency
+	
+PLUGIN_SHAIRTUNES2_HTTPLATENCY
+	EN	HTTP latency
+
+PLUGIN_SHAIRTUNES2_HTTPFILL
+	EN	Fill HTTP stream
+	
+PLUGIN_SHAIRTUNES2_LATENCY_DESC
+	EN	Use to tweak buffering realtime bridge buffering. AirPlay frames are received using UDP (realtime RTP) and 
+	EN	are forwarded to SB using HTTP. When two received UDP frames are not consecutive, the in-between missing 
+	EN	ones are requested again but HTTP sending must be put on hold while waiting for these. After holding time
+	EN	elapsed, silence frame are sent. It's also possible to send silence frames when no UDP frames at all are
+	EN	received after the same holding period.
+	EN	SB players must also have enough frames buffered to ensure uninterrupted playback. It seems that the "Buffer Level"
+	EN	parameter above is not working well, so it's also possible to force the bridge to insert silence frames at the 
+	EN	beginning so that SB players will receive a large amount of larger burst frames at startup
+	EN	<br>- RTP: max holding time (ms) of HTTP sending when missing UDP frames
+	EN	<br>- HTTP: duration of silence frames sent at playback start to allow SB buffering 
+	EN	<br>- Fill HTTP stream: send silence frames if buffer remains empty for more than holding time
+	
+PLUGIN_SHAIRTUNES2_ENCODE
+	EN	Encoding parameters
+	
+PLUGIN_SHAIRTUNES2_ENCODE_DESC
+	EN	Audio received from AirPlay devices are coded using ALAC, which cannot be streamed directly to LMS players.
+	EN	It can be re-encoded in wave, flac, aac or mp3. With flac, the compression level can be adjusted from 0 to 9
+	EN	(default = 0, gives lowest compression, least CPU consumption). With mp3/aac the bitrate must bet set (default = 192/128)
+	
+PLUGIN_SHAIRTUNES2_FLACLEVEL
+	EN	Level
+	
+PLUGIN_SHAIRTUNES2_BITRATE
+	EN	Bitrate
+	
+PLUGIN_SHAIRTUNES2_DRIFT
+	EN	Let timing references drift
+	
+PLUGIN_SHAIRTUNES2_DRIFT_DESC
+	EN	AirPlay and LMS timing references are asynchronous and, on a long term, their differences can create
+	EN	buffer underrun or overrun (producing too much or not enough samples). This is corrected by forcing
+	EN	the addition or deletion of a 8 ms buffer when needed, but such adjustement creates a "click". Disable 
+	EN	this option avoid it but let references drift.
+	
+PLUGIN_SHAIRTUNES2_SYNCVOLUME
+	EN	Change volume of sync'd players
+	
+PLUGIN_SHAIRTUNES2_SYNCVOLUME_DESC
+	EN	When player used through ShairTunes2 is synchronized, changing its volume will proportionally change volume 
+	EN	of other players in the sync group
+	
+PLUGIN_SHAIRTUNES2_SQUEEZELITE
+	EN	Allow all Squeezelite-based Players
+	
+PLUGIN_SHAIRTUNES2_SQUEEZELITE_DESC
+	EN	Allow squeezelite version lower than 1.8 and AirPlay, ChromeCast and UPnP bridge "virtual" players to be used 
+	EN	as well as squeezelite-esp32 based devices (SqueezeAMP, DAC32 and WROVER/A1S/ESP32 boards)
+	

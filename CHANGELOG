@@ -1,0 +1,614 @@
+note:
+	- Playback will fail if PCM is used and target device requires MP3 conversion (eg it is a bridge) 
+	because the lame conversion rule expects a wav file which means a header. 
+	- BEWARE OF VERSION NUMBER FOR PERL LIBS
+	- to create perl libs
+		perlbrew install --multi --64int --thread --notest -j 4 perl-x.yy.z (add -Dcc=gcc on solaris)
+		source ~/perl5/perlbrew/etc/bashrc
+		perlbrew switch perl-x.yy.z
+		
+		cpan -T Crypt::OpenSSL::RSA
+		cpan -T Crypt::Ed25519
+		cpan -T CryptX
+		
+		with version number:
+		
+        cpan -T MLEHMANN/Crypt-Ed25519-1.04.tar.gz
+		cpan -T TODDR/Crypt-OpenSSL-RSA-0.30.tar.gz
+		cpan -T MIK/CryptX-0.060.tar.gz
+		(on Solaris and a few debian - arm & aarch64 now, need to specify mirror -M https://cpan.metacpan.org before the lib name)
+	- on FreeBSD, use cshrc instead of bashrc or launch bash before "sourcing"
+
+1.7.2
+ - fix f-up build
+ - Strawberry Perl 64 bits
+
+1.7.1
+ - discard silence frame after flush
+ - log resent/missed frames properly
+ 
+1.7.0
+ - use updated libraop that has a proper handling of flush/first frame
+ 
+1.6.0	
+ - only send silence on first GET (after a flush) and close socket on flush
+
+1.5.6
+ - use updated libcodecs and libraop	
+
+1.5.5
+ - previous version had a miss build	
+
+1.5.4
+ - updated libraries with more memory leaks fixed
+
+1.5.3
+ - fix a few codec issues and memory leaks
+ - FreeBSD name seems to have changed
+ 
+1.5.2
+ - just use new libraop where encoder has moved to libcodecs
+ 
+1.5.1
+ - surely works better with all helpers recompiled...
+ 
+1.5.0
+ - add aac codec (use refactored libraop)
+ 
+1.4.0
+ - proper fix of HTTP get frames & fill
+ 
+1.3.6
+ - libraop icy resend was sending a 1 instead of a 0 at each icy interval - good grief !!!
+ 
+1.3.5
+ - really fix it because 1st NTP can be received after 1st RTP	
+
+1.3.4
+ - fix http_fill mode	
+	
+1.3.3
+ - update libs (kd_dump)
+ 
+1.3.2
+ - don't set audio_offset, it cannot work w/o a track processor	
+
+1.3.1
+ - fix wav making a click for player that don't support wav (pcm only)
+ 
+1.3.0
+ - update openssl to 1.1.1u
+ - update cross_tools
+ 
+1.2.1
+ - well, keep both
+ 
+1.2.0
+ - move back to shared libraries
+ 
+1.1.2
+ - Use mDNS empty round update
+ 
+1.1.1
+ - make sure we are build with no libmvec
+ 
+1.1.0
+ - bring back armv5	
+   
+1.0.15
+ - (P) osArch is M1 for MacOS M1   
+    
+1.0.14
+ - fix MacOS helper names    
+    
+1.0.13
+ - add vcredist link    
+    
+1.0.12
+ - release
+ 
+1.0.11
+ - (P) fix aarch64 names for Perl >= 5.32
+ 
+1.0.10
+ - update libraop (no functional change)
+ 
+1.0.9
+ - (P) add extra libs for 5.34 and 5.36
+ 
+1.0.8
+ - new mdnssvc API
+
+1.0.7
+ - use really static glibc (-nss)
+
+1.0.6
+ - add MacOS universal binaries
+ 
+1.0.5
+ - add armv6
+ 
+1.0.4	
+ - update mdnssd
+
+1.0.3
+ - update libmdns 
+ 
+1.0.2
+ - fix mdns service query issues
+ - add arm64 for M1 
+	
+1.0.1
+ - new compîlers to allow glibc starting 2.23
+ - mips is bigendian by default
+ 
+1.0.0 
+ - new build backend 
+ - iface can be used for binding
+ - many small changes...
+ 
+0.205.3
+ - (P) bind listening socket to LMS' address (thanks@chincheta0815)
+	
+0.205.2
+ - fix "Connection" response to HTTP2
+ - use SetCurrentTitel instead of newmetadata
+
+0.205.1
+ - fix CVE-2017-12087
+
+0.205.0
+ - add Perl 5.32.x support for Linux (x86, x64, armv7, aarch64) and freebsd (x64)
+ 
+0.204.1
+ - comparison mistake with squeezeesp32 (!= instead of !~)
+ 
+0.204.0
+ - do not load squeezeesp32 by default 
+ 
+0.203.4
+ - hairtunes update to align with AirConnect (silence when flush)
+
+0.203.3		
+ - single HTTP header line can be greater than 256 bytes
+
+0.203.2
+ - util_loglevel should follow cmd line settings
+ - update util log levels
+ 
+0.203.0
+ - align with AirConnect (allow chunked mode & fixed http length)
+ 
+0.202.0
+ - align hairtunes with AirConnect (no change)
+		
+0.201.0
+ - change variable names for better clarity
+  
+0.200.0	
+ - major refactor to simplify data structure
+ - delete properly players even when there is no client
+ - remove zombie client before reconnecting
+ - remove use of 'codec' as a parameter in settings 
+		
+0.120.5
+ - no quite...
+ 
+0.120.4
+ - disconnecting client was not using clientid so no actual client was deleted, potentially causing socket exhaustion		
+
+0.120.3
+ - finally sorted out why "codec" was being erased in settings => any preferenece that is not "represented/set" in HTML must be re-written
+ 
+0.120.2
+ - add the plugin listeners to the range-constrained ports
+ - increment helper version 
+		
+0.120.1
+ - "range" was not saved in settings (old "count" named was left)
+ 
+0.120.0
+ - let user select port range		
+
+0.112.3 
+ - replace stristr by strcasestr
+ - tweak HTTP logs
+ - http_parse SDEBUG statement did not print received line
+ 
+0.112.1
+ - send as many bytes as possible on partial content        
+
+0.112.0
+ - better handling of partial content in HTTP 1.1 and over-count offset        
+
+0.111.0
+ - add crypto for perl 5.30
+
+0.110.0
+ - check modelName against "Bridge"
+ 
+0.109.0
+ - only check client->model instead of client->modelName
+ 
+0.108.2
+ - memorize volume from prefs not from $client->volume() as it might be ramping up 
+ 
+0.108.1
+ - backported a few non-impacting issues from RAOP and UPnP core 
+ 
+0.108.0
+ - LMS version update
+ - add FreeBSD
+
+0.107.7
+ - revert buffer indexing modifications
+ 
+0.107.6
+ - correct a key problem with circular buffer management and fill estimation
+ - integer promotion caused u16 comparisons to be wrong
+
+0.107.5
+ - UDP socket don't need shutdown
+ - destroy ab_mutex on thread termination
+ 
+0.107.4
+ - revert previous change
+ - promote buf_fil to s16 before arithmetic
+ 
+0.107.3
+ - ancient 32 bits overflow bug in expected playtime calculation
+
+0.107.2
+ - add 'bridge' to excluded models
+ 
+0.107.1
+ - notify for metadata update when receiving a progress indicator
+ - set duration in metadata as well
+ 
+0.107.0
+ - silence frames count on http reconnect shall be 0 when already sending silence
+ - limit packet recovery to max of rtp latency and http delay
+ - misc network congestion corrections
+
+0.106.0
+ - (p) duration & position handling correction
+ - (p) use 'load' on RECORD instead of 'play'
+ - update util.h with extra metadata (airconnect backport)
+ - disable http range response (LMS requests range with flac)
+ - send silence frames as soon as playtime reached to ensure continuous HTTP stream
+ - discriminate FLUSH send at start to clean pipe from FLUSH used to stop playback using RECORD values and timer
+ - resend timeout was wrong (in http thread)
+ - silence frames count on http reconnect shall be 0 when already sending silence
+ - limit packet recovery to max of rtp latency and http delay
+		
+0.105.3
+ - encode playername in hw_addr as well		
+
+0.105.2
+ - encode apname in utf8 before hashing & broadcasting
+ 
+0.105.1
+ - setting "all squeezelite" option was only working after "apply"
+ 
+0.105.0
+ - sort players by name
+ 
+0.104.7
+ - metadata was freed after ctx was released
+ - backport AirConnect 0.2.3.0 modifications
+ 
+0.104.6		
+ - set length for silent frame now that length must be returned	
+
+0.104.5
+ - aesiv and aeskey can start with a '\0', use a decrypt explicit boolean
+ 
+0.104.4
+ - handle variable size alac packets
+	
+0.104.3
+ - parse error in Intel CPUs Perl name
+ 
+0.104.2 
+ - update latency help 	
+ - i686 build for Perl 5.18
+ - directory names for elib where messed up ... again
+ 
+0.104.0
+ - add perl 5.28
+ - for group players, volume change shall not apply to sync players even when flag set 
+ 
+0.103.5
+ - incorrect spelling of string for MP3 bitrate 
+
+0.103.4
+ - when adding mDNS instance, verify that background actually returned a pid
+ 
+0.103.3
+ - sparc and ppc compiler required kernel > 3.2.0 due to glibc being 2.23+ ==> moved back cross-compiler to use glibc 2.19 (need OBSOLETE enabled)
+
+0.103.2
+ - getsockoption for SO_REUSEPORT was resetting parameter
+ 
+0.103.1
+ - set SO_REUSEPORT only if option supported
+ - full cross-compiling
+ 
+0.103.0
+ - add SO_REUSEPORT for Linux in mDNS	
+ 
+0.102.3
+ - HTTP reponse to coverart was not "\r\n"
+ 
+0.102.2
+ - helper exec bit was not set when selected manually
+ 
+0.102.1
+ - need overload CanStreamDirect and not CanStreamDirectSong
+ - now wav-mp3 &flc-mp3 rules seems to be unless - loosing it
+  
+0.102.0
+ - correct misshandling of CanHandleTranscode (plugin can not)
+ - correct bitrate reponse when opening url
+ - add no seek capability
+ - add custom-convert.conf to finally handle wav and flc conversion when remote, which allows bitrate limitation
+ 
+0.101.2
+ - wrong handling of 'wav/pcm' codec
+ - change 'flac' codec name to 'flc'
+
+ 0.101.1
+ - WebUI codec name for flac was wrong ('flc' instead of 'flac')
+ - flac level 0 in UI was not handled
+ 
+0.101.0
+ - improve settings UI by adding list of flac/mp3 options
+ 
+0.100.0
+ - add mp3 encoding
+ - add flac compression level
+
+0.92.1
+ - authorize non-encrypted sessions
+ - coverart can be jpeg or png
+ 
+0.92.0
+ - save & Restore LMS volume between AirPlay sessions
+ 
+0.91.4
+ - add all lib in a "elib" directory and make sure its path is at the end of @INC
+ - add x86 and x64 versions for Perl 5.14
+ - use helper PID in URL
+ 
+0.91.3
+ - use @INC instead of renaming directory
+ 
+0.91.2
+ - Crypt lib only used if system version non available
+	
+0.91.1
+ - rename i686, x86_64 and aarch64 auto directories (add gnu-)
+ - add x86 and x86_64 shared lib 5.16 version (ancient!)
+ 
+0.91.0
+ - update OpenSSL	
+ - added various Perl & CPU
+ - 32 bits comparaison correction
+
+0.90.6
+ - aarch64 version
+ 
+0.90.5
+ - if previous HTTP socket was not closed, it could be used to send new track, causing miss of flac header (backport from AirConnect, no mandatory here)
+ - kd_dump was writing in a NULL string when no header was received
+ 
+0.90.1
+ - add ppc version
+ 
+0.90.0
+ - players can be added/remove dynamically
+ - add option to republish all & kill all mDNS helper
+ - use TCP_NODELAY in HTTP socket
+ 
+0.85.1
+ - correct one potentil issue with empty header on HTTP response
+ 
+0.85.0
+ - restore existing playlist when exiting
+ 
+0.84.0
+ - mDNS sender should set TTL to 120s for SRV, PTR, and A (not TXT)
+ - use closesocket under Windows, not close!
+ 
+0.83.2
+ - Perl 5.10.0 builds do not need 64int
+ - update tinymdnssvc
+ 
+0.83.0
+ - optimize RTP frame recovery in case of network blackouts
+
+0.82.5
+ - and ... put the lib at the correct place for 5.10
+ 
+0.82.4
+ - added libs for Linux x86 5.10 and Solaris x86 5.24
+ 
+0.82.3
+ - fix "settings" link
+ 
+0.82.1
+ - add "settings" link in plugin page
+ 
+0.82.0
+ - add 'drift' option 
+ - add support for perl 5.26
+
+0.81.1
+ - contentType for LMS is not mime, just 'flac', 'wav' or 'mp3', not 'audio/xxx'
+ 
+0.81.0
+ - better handling of wav format vs flac
+ - added pcm option to hairtunes.c (not usable in LMS as format must be known during transcoding)
+ 
+0.80.4
+ - flac_ready boolean was un-necessary
+ - wait for playing (RTP) before sending silent frames
+ - was sending a few raw frames at the beginning when using flac
+ - functions renaming for better consistency
+ - remove usesync option
+
+0.80.3
+ - close socket on http_thread termination if !=1, no == -1 ...
+ 
+0.80.2
+ - code cleaning
+
+0.80.1
+ - Do not consume frames when http_session not ready
+ - In case of overflow, restart as far as possible 
+ - Force some parameters values (latency, http_latency, buffer threshold)
+	
+0.80.0
+ - Use only one socket for all IPC communication
+ 
+0.74.0
+ - HTTP delay uses silence frames
+ 
+0.73.1
+ - sync correction was causing rollover when buffer was empty
+
+ 0.73.0
+ - add HTTP delay (delay before sending "play" command to LMS to let bridge do buffering)
+ - do not hold RTP frames when they are available! only hold missing one, up to RTP latency
+ 
+0.72.10
+ - cannot test *aeskey or aesiv, might start by '0'
+ 
+0.72.9
+ - only notify of playback when frame is not silence (all 0) to avoid iOS 10.x spurious play
+ - print flush on stdout only if flush done (flush seqno > ab_read)
+ - add proper wav file header
+ - (P) stop LMS player only when FLUSH acknowledge (found on stdout)
+  
+0.72.8
+ - Try to increase SO_SNDBUF in http thread to try to improve sloppy network behavior
+ 
+0.72.7
+ - workaround for wrong SDP session by some client (AirAudio)
+
+0.72.6
+ - mDNS broadcast uses LMS socket to avoid issue with multi-home networks
+ - try to killall process when plugin terminates
+
+0.72.5
+  high CPU usage in http frames handling
+ 
+0.72.4
+ - (P) boolean parameters whose default is true were alwasy reset to default at LMS startup
+ 
+0.72.3
+ - add "HTTP catchup" to better handle network sloppyness
+ 
+0.72.2
+ - use_flac default was wrong
+ - add use_sync option
+ 
+0.72.1
+ - Add correct shared libs (multi, thread, 64int)
+
+0.72.0
+ - Refactor to use share AirConnect code
+ 
+0.71.2
+ - helperBinary must be called at least when plugin 1st run
+
+0.71.1
+ - revert change of @INC
+ 
+0.71.0
+ - Let user choose helper
+ 
+0.70.5 
+ - (P) Add local lib to the end of @INC, not the beginning
+
+0.70.4
+ - Fix mDNS broadcaster memory allocation issue
+
+ 0.70.3
+ - Detection of Linux x64 was faulty, x86 was selected instead
+ 
+0.70.2
+ - Add arm binaries for Perl 5.24
+ 
+0.70.1 
+ - Correct log for fill buffer status
+ 
+0.70.0
+ - Cleanup of most of code
+ - Synchronization now based on true NTP from server/client
+ - Reception of "flush" command over socket should be mutex protected
+ - Do not wait fdor "sync" marker to start playback
+ 
+0.61.0
+ - Statically link FLAC in Windows
+ 
+0.60.3
+ - mDNS broadcast had a TTL < 255, potentially causing some player to not be discovered
+
+0.60.2
+ - Solaris detection was wrong
+ 
+0.60.1
+ - Sleeping time when no frame available was too long
+ - Add buffer level trace every ~5s
+
+0.60.0
+ - Option to re-encode in flac
+ - Volume synchronization w/ ratio amongst sync'd players
+ - Volume feedback from SB player to AirPlay client
+ - Re-arrange log level
+ 
+0.50.2
+ - armv5hf moved to armv5te with softfp (used FPU if available)
+
+0.50.1
+ - Add Crypt::OpenSSL::RSA for sunos/perl 5.12
+ 
+0.50.0
+ - Send "play" only when receiving "RECORD" (see not in hairtunes.c about deadlock)
+ - New buffering method using time instead of buffer length only
+ - Default buffer threshold is 750ms
+ - Reorganize loglevels
+  
+0.42.0
+ - Use cross-compiling to support pi-1
+ - Add armv5te build 
+ - Change armhf to armv6hf
+ 
+0.41.1
+ - Add Solaris support
+ - Stream must start if first flag is sync or audio
+ 
+0.40.0
+ - Clean debug in helper
+ - BufferThreshold set to 255KB by default
+ - Add Setting pages to select players, set BufferThreshold and loglevel
+  
+0.37.0
+ - Add debug capabilities in helper
+ - RTP resent counter was not mutex protected
+ - When creating socket, do not set timeout!
+ - in RECORD, Audio-Latency set to 44100
+
+0.36.0
+ - Remove buffering in helper ==> was conflicting with LMS buffer, creating shuttering
+ - Remove some packet retransmission which did not seem necessary (tbc)
+ - Buffer only if packets are missing, up to 64 pakcets (x8ms= 512ms)
+ 
+0.35.3
+ - Close image proxy socket w/o waiting for the other end to respond
+ - helper: when overrun happens, keep the largest amount of buffered audio
+ - change name to avoid conflict with original version
+ 
+0.35.2
+ - For doAction, LMS always sends the master player, even if the skip/prev is made on a slave
